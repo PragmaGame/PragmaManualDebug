@@ -1,5 +1,5 @@
 ﻿using System;
-using DebugPanel;
+using ManualDebug;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -11,14 +11,14 @@ namespace DefaultNamespace
         
         private TestReceiver _testReceiver;
         private TestReceiver2 _testReceiver2;
-        private ManualDebug _manualDebug;
+        private ManualDebug.ManualDebug _manualDebug;
 
         private void Awake()
         {
             _testReceiver = new TestReceiver();
             _testReceiver2 = new TestReceiver2();
             
-            _manualDebug = new ManualDebug();
+            _manualDebug = new ManualDebug.ManualDebug();
             _panel.SetManualDebug(_manualDebug);
             
             _manualDebug.AddReceivers(new object[]{_testReceiver, _testReceiver2}, true);

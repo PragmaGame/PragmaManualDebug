@@ -1,13 +1,11 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace DebugPanel
+namespace ManualDebug
 {
     public class ManualDebugPanel : MonoBehaviour
     {
-        [SerializeField] private TMP_Dropdown _dropdown;
+        [SerializeField] private ManualDebugSearchPanel _searchPanel;
         
         private ManualDebug _manualDebug;
         
@@ -22,14 +20,7 @@ namespace DebugPanel
 
         private void OnRefresh()
         {
-            _dropdown.options.Clear();
-
-            foreach (var key in _manualDebug.GetKeys)
-            {
-                _dropdown.options.Add(new TMP_Dropdown.OptionData(key));
-            }
-
-            _dropdown.RefreshShownValue();
+            _searchPanel.Refresh(_manualDebug.GetKeys);
         }
     }
 }

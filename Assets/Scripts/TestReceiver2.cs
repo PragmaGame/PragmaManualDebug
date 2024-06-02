@@ -1,4 +1,4 @@
-﻿using DebugPanel;
+﻿using ManualDebug;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -6,15 +6,15 @@ namespace DefaultNamespace
     public class TestReceiver2
     {
         [ManualDebugButton]
-        public void MethodC()
+        public void SetHealth()
         {
-            Debug.Log("C");
+            Debug.Log("SetHealth");
         }
         
         [ManualDebugButton]
-        public void MethodD()
+        public void SetArmor()
         {
-            Debug.Log("D");
+            Debug.Log("SetArmor");
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace DebugPanel
+namespace ManualDebug
 {
     public class ButtonInfo
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using DebugPanel;
+using ManualDebug;
 using UnityEngine;
 
 namespace DefaultNamespace
@@ -7,15 +7,15 @@ namespace DefaultNamespace
     public class TestReceiver
     {
         [ManualDebugButton]
-        public void MethodA()
+        public void SetLevel()
         {
-            Debug.Log("A");
+            Debug.Log("SetLevel");
         }
         
         [ManualDebugButton]
-        public void MethodB()
+        public void SetDamage()
         {
-            Debug.Log("B");
+            Debug.Log("SetDamage");
         }
     }
 }

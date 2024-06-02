@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DebugPanel
+namespace ManualDebug
 {
     public class ManualDebug
     {
         private const BindingFlags FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private Dictionary<string, ButtonInfo> _map;
+        private readonly Dictionary<string, ButtonInfo> _contexts;
 
         public event Action RefreshEvent;
 
         public ManualDebug()
         {
-            _map = new Dictionary<string, ButtonInfo>();
+            _contexts = new Dictionary<string, ButtonInfo>();
         }
 
-        public List<string> GetKeys => _map.Keys.ToList();
+        public List<string> GetKeys => _contexts.Keys.ToList();
 
-        public void AddReceiver(object receiver, bool isNotify = false)
+        public void AddContext(object receiver, bool isNotify = false)
         {
             var type = receiver.GetType();
             
@@ -30,7 +30,7 @@ namespace DebugPanel
 
                 foreach (var methodInfo in methods)
                 {
-                    _map.Add($"{type.Name}.{methodInfo.Name}", new ButtonInfo(methodInfo, receiver));
+                    _contexts.Add($"{type.Name}.{methodInfo.Name}", new ButtonInfo(methodInfo, receiver));
                 }
 
                 type = type.BaseType;
@@ -46,7 +46,7 @@ namespace DebugPanel
         {
             foreach (var receiver in receivers)
             {
-                AddReceiver(receiver);
+                AddContext(receiver);
             }
 
             if (isNotify)
@@ -57,7 +57,7 @@ namespace DebugPanel
 
         public void Invoke(string key, object[] param = null)
         {
-            var value = _map[key];
+            var value = _contexts[key];
 
             value.methodInfo.Invoke(value.receiver, param);
         }

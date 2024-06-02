@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DebugPanel
+namespace ManualDebug
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class ManualDebugButtonAttribute : Attribute
