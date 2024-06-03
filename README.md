@@ -1,1 +1,1 @@
-# DebugPanel
+# ManualDebug

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DuoVia.FuzzyStrings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +12,14 @@ namespace ManualDebug
         [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private ScrollRect _scroll;
 
+        [SerializeField] private Dropdown _dropdown;
+
         [SerializeField] private ManualDebugDropdownItem _prefab;
 
         private List<ManualDebugDropdownItem> _dropdownItems;
         private ManualDebugDropdownItem _selectedItem;
 
-        public event Action<string> SelectedEvent; 
+        public event Action<string> SubmitEvent; 
 
         private void Awake()
         {
@@ -28,11 +29,15 @@ namespace ManualDebug
         private void OnEnable()
         {
             _inputField.onValueChanged.AddListener(OnInputValueChanged);
+            _inputField.onSelect.AddListener(OnInputSelect);
+            _inputField.onSubmit.AddListener(OnSubmit);
         }
 
         private void OnDisable()
         {
             _inputField.onValueChanged.RemoveListener(OnInputValueChanged);
+            _inputField.onSelect.RemoveListener(OnInputSelect);
+            _inputField.onSubmit.RemoveListener(OnSubmit);
         }
 
         public void Refresh(List<string> keys)
@@ -57,7 +62,18 @@ namespace ManualDebug
         private void OnClickDropdownItem(ManualDebugDropdownItem item)
         {
             _inputField.text = item.MethodName;
-            SelectedEvent?.Invoke(item.MethodName);
+            SubmitEvent?.Invoke(item.MethodName);
+            _scroll.gameObject.SetActive(false);
+        }
+
+        private void OnInputSelect(string value)
+        {
+            _scroll.gameObject.SetActive(true);
+        }
+
+        private void OnSubmit(string value)
+        {
+            _scroll.gameObject.SetActive(false);
         }
 
         private void OnInputValueChanged(string value)

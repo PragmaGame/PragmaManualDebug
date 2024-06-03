@@ -1,7 +1,11 @@
 ﻿using System;
+using NaughtyAttributes.Scripts.Core.DrawerAttributes;
+using NaughtyAttributes.Scripts.Core.DrawerAttributes_SpecialCase;
+using NaughtyAttributes.Scripts.Core.MetaAttributes;
+using NaughtyAttributes.Scripts.Core.Utility;
 using UnityEngine;
 
-namespace NaughtyAttributes.Test
+namespace NaughtyAttributes.Scripts.Test
 {
     public class DisableIfTest : MonoBehaviour
     {

@@ -2,20 +2,29 @@
 using ManualDebug;
 using UnityEngine;
 
-namespace DefaultNamespace
+public class TestReceiver
 {
-    public class TestReceiver
+    [ManualDebugButton]
+    public void SetInt(int intValueName)
     {
-        [ManualDebugButton]
-        public void SetLevel()
-        {
-            Debug.Log("SetLevel");
-        }
-        
-        [ManualDebugButton]
-        public void SetDamage()
-        {
-            Debug.Log("SetDamage");
-        }
+        Debug.Log($"SetInt {intValueName}");
     }
+        
+    [ManualDebugButton]
+    public void SetString(string stringValueName)
+    {
+        Debug.Log($"SetString {stringValueName}");
+    }
+        
+    [ManualDebugButton]
+    public void SetEnum(TestEnum enumValueName)
+    {
+        Debug.Log($"SetEnum {enumValueName}");
+    }
+}
+
+public enum TestEnum
+{
+    Element1 = 1,
+    Element2 = 2,
 }

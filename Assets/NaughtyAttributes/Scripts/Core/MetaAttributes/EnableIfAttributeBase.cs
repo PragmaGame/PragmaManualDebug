@@ -1,6 +1,7 @@
 ﻿using System;
+using NaughtyAttributes.Scripts.Core.Utility;
 
-namespace NaughtyAttributes
+namespace NaughtyAttributes.Scripts.Core.MetaAttributes
 {
     public abstract class EnableIfAttributeBase : MetaAttribute
     {

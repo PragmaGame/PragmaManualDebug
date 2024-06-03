@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using ManualDebug;
 
-namespace DuoVia.FuzzyStrings
+namespace ManualDebug
 {
     public static class StringExtensions
     {

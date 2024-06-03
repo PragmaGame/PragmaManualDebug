@@ -1,20 +1,7 @@
-﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Derived from http://www.codeguru.com/vb/gen/vb_misc/algorithms/article.php/c13137__1/Fuzzy-Matching-Demo-in-Access.htm
- * and from http://www.berghel.net/publications/asm/asm.php 
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-namespace DuoVia.FuzzyStrings
+﻿namespace ManualDebug
 {
 	public static class LevenshteinDistanceExtensions
 	{
-		/// <summary>
-		/// Levenshtein Distance algorithm with transposition. <br />
-		/// A value of 1 or 2 is okay, 3 is iffy and greater than 4 is a poor match
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="comparedTo"></param>
-		/// <param name="caseSensitive"></param>
-		/// <returns></returns>
 		public static int LevenshteinDistance(this string input, string comparedTo, bool caseSensitive = false)
 		{
 			if (string.IsNullOrWhiteSpace(input) || string.IsNullOrWhiteSpace(comparedTo)) return -1;

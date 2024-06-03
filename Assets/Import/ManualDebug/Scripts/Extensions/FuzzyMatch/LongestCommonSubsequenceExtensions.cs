@@ -1,20 +1,9 @@
-﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
- * Derived from http://www.codeproject.com/KB/recipes/lcs.aspx 
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+﻿using System;
 
-using System;
-
-namespace DuoVia.FuzzyStrings
+namespace ManualDebug
 {
 	public static class LongestCommonSubsequenceExtensions
 	{
-		/// <summary>
-		/// Longest Common Subsequence. A good value is greater than 0.33.
-		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="comparedTo"></param>
-		/// <param name="caseSensitive"></param>
-		/// <returns>Returns a Tuple of the sub sequence string and the match coeficient.</returns>
 		public static Tuple<string, double> LongestCommonSubsequence(this string input, string comparedTo, bool caseSensitive = false)
 		{
 			if (string.IsNullOrWhiteSpace(input) || string.IsNullOrWhiteSpace(comparedTo)) return new Tuple<string, double>(string.Empty, 0.0d);

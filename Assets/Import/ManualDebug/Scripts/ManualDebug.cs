@@ -9,13 +9,13 @@ namespace ManualDebug
     {
         private const BindingFlags FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private readonly Dictionary<string, ButtonInfo> _contexts;
+        private readonly Dictionary<string, ContextMethodBind> _contexts;
 
         public event Action RefreshEvent;
 
         public ManualDebug()
         {
-            _contexts = new Dictionary<string, ButtonInfo>();
+            _contexts = new Dictionary<string, ContextMethodBind>();
         }
 
         public List<string> GetKeys => _contexts.Keys.ToList();
@@ -30,7 +30,7 @@ namespace ManualDebug
 
                 foreach (var methodInfo in methods)
                 {
-                    _contexts.Add($"{type.Name}.{methodInfo.Name}", new ButtonInfo(methodInfo, receiver));
+                    _contexts.Add($"{type.Name}.{methodInfo.Name}", new ContextMethodBind(methodInfo, receiver));
                 }
 
                 type = type.BaseType;
@@ -42,7 +42,7 @@ namespace ManualDebug
             }
         }
 
-        public void AddReceivers(IEnumerable<object> receivers, bool isNotify = false)
+        public void AddContexts(IEnumerable<object> receivers, bool isNotify = false)
         {
             foreach (var receiver in receivers)
             {
@@ -55,11 +55,13 @@ namespace ManualDebug
             }
         }
 
+        public MethodInfo GetMethod(string key) => _contexts[key].methodInfo;
+
         public void Invoke(string key, object[] param = null)
         {
             var value = _contexts[key];
 
-            value.methodInfo.Invoke(value.receiver, param);
+            value.methodInfo.Invoke(value.context, param);
         }
     }
 }
