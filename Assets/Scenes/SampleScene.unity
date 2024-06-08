@@ -722,6 +722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f546ea56f7f647b78af9cf237d0e8ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _testScriptable: {fileID: 11400000, guid: 79fca287e8190594ca6d47a48421de30, type: 2}
   _panel: {fileID: 2056513443}
 --- !u!4 &1785373444
 Transform:

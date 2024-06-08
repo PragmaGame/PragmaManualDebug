@@ -37,7 +37,7 @@ namespace ManualDebug
             {
                 var prefabInput = _prefabInputs.FirstOrDefault(prefab => prefab.Style == parameter.styleType);
                 var input = Instantiate(prefabInput, transform);
-                input.Setup(parameter.displayName, parameter.setter?.GetDefaultValues());
+                input.Setup(parameter.displayName, parameter.GetDefaultValues());
                 _inputs.Add(input);
             }
         }

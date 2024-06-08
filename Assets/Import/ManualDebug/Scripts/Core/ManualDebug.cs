@@ -26,6 +26,7 @@ namespace ManualDebug
                 new PrimitiveOverride(),
                 new StringOverride(),
                 new EnumOverride(),
+                new UnityOverride(),
             };
         }
 
@@ -156,27 +157,23 @@ namespace ManualDebug
 
             if (!string.IsNullOrEmpty(data.defaultValueSetterMethodName))
             {
-                var valueSetter = new ParameterDefaultValueSetter
+                var valueSetter = new MethodParameterDefaultValueSetter(data.isСachedValues)
                 {
-                    isСachedValues = data.isСachedValues,
                     setterContext = context,
                     setterMethod = contextType.GetMethod(data.defaultValueSetterMethodName, FLAGS)
                 };
 
-                parameter.setter = valueSetter;
+                parameter.extraSetter = valueSetter;
                 
                 return;
             }
 
             if (data.defaultValues != null)
             {
-                var valueSetter = new ParameterDefaultValueSetter
-                {
-                    isСachedValues = true,
-                    setterValues = data.defaultValues.Select(value => value.ToString())
-                };
+                var valueSetter =
+                    new ParameterDefaultValueSetter(true, data.defaultValues.Select(value => value.ToString()));
 
-                parameter.setter = valueSetter;
+                parameter.extraSetter = valueSetter;
             }
         }
     }

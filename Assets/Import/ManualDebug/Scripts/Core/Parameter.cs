@@ -9,6 +9,11 @@ namespace ManualDebug
         public string displayName;
         public ManualParamStyleType styleType;
         public AbstractParameterConverter converter;
-        public ParameterDefaultValueSetter setter;
+        public ParameterDefaultValueSetter extraSetter;
+
+        public IEnumerable<string> GetDefaultValues()
+        {
+            return extraSetter == null ? converter.GetStringDefaultValues() : extraSetter.GetStringDefaultValues();
+        }
     }
 }

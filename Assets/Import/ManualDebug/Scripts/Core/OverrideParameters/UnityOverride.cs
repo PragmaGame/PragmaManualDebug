@@ -1,14 +1,15 @@
 ﻿using System;
+using Object = UnityEngine.Object;
 
 namespace ManualDebug
 {
-    public class EnumOverride : IOverrideParameter
+    public class UnityOverride : IOverrideParameter
     {
         public bool TryOverride(Type type, Parameter parameter)
         {
-            if (type.IsEnum)
+            if(typeof(Object).IsAssignableFrom(type))
             {
-                parameter.converter = new EnumConverter(type, true);
+                parameter.converter = new UnityConverter(type, false);
                 parameter.styleType = ManualParamStyleType.Dropdown;
 
                 return true;

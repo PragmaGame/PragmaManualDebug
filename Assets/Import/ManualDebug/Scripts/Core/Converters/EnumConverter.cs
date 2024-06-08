@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ManualDebug
 {
     public class EnumConverter : AbstractParameterConverter
     {
-        public EnumConverter(Type conversionType) : base(conversionType)
+        public EnumConverter(Type conversionType, bool isСachedDefaultValues) : base(conversionType, isСachedDefaultValues)
         {
         }
 
@@ -16,6 +17,11 @@ namespace ManualDebug
             }
             
             return Enum.Parse(conversionType, (string)value);
+        }
+
+        protected override IEnumerable<string> InternalGetStringDefaultValues()
+        {
+            return Enum.GetNames(conversionType);
         }
     }
 }

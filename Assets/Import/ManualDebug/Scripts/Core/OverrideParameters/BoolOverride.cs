@@ -8,7 +8,7 @@ namespace ManualDebug
         {
             if (type == typeof(bool))
             {
-                parameter.converter = new PrimitiveConverter(type);
+                parameter.converter = new PrimitiveConverter(type, true);
                 parameter.styleType = ManualParamStyleType.Toggle;
 
                 return true;
