@@ -8,6 +8,7 @@ namespace ManualDebug
     {
         public string displayName;
         public ManualParamStyleType styleType;
+        public bool isAllowedOverrideStyle = true;
         public AbstractParameterConverter converter;
         public ParameterDefaultValueSetter extraSetter;
 

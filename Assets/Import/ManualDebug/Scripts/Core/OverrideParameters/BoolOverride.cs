@@ -10,7 +10,8 @@ namespace ManualDebug
             {
                 parameter.converter = new PrimitiveConverter(type, true);
                 parameter.styleType = ManualParamStyleType.Toggle;
-
+                parameter.isAllowedOverrideStyle = false;
+                
                 return true;
             }
 

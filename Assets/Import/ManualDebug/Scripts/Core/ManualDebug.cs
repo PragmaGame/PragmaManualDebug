@@ -143,8 +143,6 @@ namespace ManualDebug
             
             return parameter;
         }
-
-        
         
         public void OverrideParameterByAttributeData(Parameter parameter, ManualParameterStyleAttribute data, object context, Type contextType)
         {
@@ -152,8 +150,11 @@ namespace ManualDebug
             {
                 return;
             }
-            
-            parameter.styleType = data.styleType;
+
+            if (parameter.isAllowedOverrideStyle)
+            {
+                parameter.styleType = data.styleType;   
+            }
 
             if (!string.IsNullOrEmpty(data.defaultValueSetterMethodName))
             {
@@ -170,10 +171,7 @@ namespace ManualDebug
 
             if (data.defaultValues != null)
             {
-                var valueSetter =
-                    new ParameterDefaultValueSetter(true, data.defaultValues.Select(value => value.ToString()));
-
-                parameter.extraSetter = valueSetter;
+                parameter.extraSetter = new ParameterDefaultValueSetter(true, data.defaultValues.Select(value => value.ToString()));
             }
         }
     }
