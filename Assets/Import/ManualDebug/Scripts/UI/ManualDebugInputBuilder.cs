@@ -1,24 +1,24 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using UnityEngine;
 
 namespace ManualDebug
 {
     public class ManualDebugInputBuilder : MonoBehaviour
     {
-        [SerializeField] private ManualDebugValueTypeBuilderInput _valueTypeInputPrefab;
+        [SerializeField] private AbstractManualDebugInput[] _prefabInputs;
 
-        private List<AbstractBuilderInput> _inputs;
+        private List<AbstractManualDebugInput> _inputs;
 
         private void Awake()
         {
-            _inputs = new List<AbstractBuilderInput>();
+            _inputs = new List<AbstractManualDebugInput>();
         }
 
-        public void Build(MethodInfo methodInfo)
+        public void Build(MethodBind bind)
         {
             ClearInputs();
-            BuildInputs(methodInfo);
+            BuildInputs(bind);
         }
 
         public void ClearInputs()
@@ -27,27 +27,18 @@ namespace ManualDebug
             {
                 Destroy(input.gameObject);
             }
+            
+            _inputs.Clear();
         }
 
-        public void BuildInputs(MethodInfo methodInfo)
+        public void BuildInputs(MethodBind bind)
         {
-            var parameterInfos = methodInfo.GetParameters();
-
-            foreach (var parameterInfo in parameterInfos)
+            foreach (var parameter in bind.Parameters)
             {
-                var type = parameterInfo.ParameterType;
-
-                if (type.IsPrimitive || type == typeof(string))
-                {
-                    var instance = Instantiate(_valueTypeInputPrefab, transform);
-                    instance.SetNameParam(parameterInfo.Name);
-                    instance.SetConversionType(type);
-                    _inputs.Add(instance);
-                }
-
-                if (type.IsEnum)
-                {
-                }
+                var prefabInput = _prefabInputs.FirstOrDefault(prefab => prefab.Style == parameter.styleType);
+                var input = Instantiate(prefabInput, transform);
+                input.Setup(parameter.displayName, parameter.setter?.GetDefaultValues());
+                _inputs.Add(input);
             }
         }
 

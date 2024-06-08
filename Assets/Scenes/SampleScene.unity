@@ -460,7 +460,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca8a4b48f76b471b9660c6b1856ee21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _valueTypeInputPrefab: {fileID: 8419825566748645223, guid: 85a230d7a817ccf4095daaf2534fe5db, type: 3}
+  _prefabInputs:
+  - {fileID: 3237863025307387088, guid: 464a92771c39ef941a1af050ed907c43, type: 3}
+  - {fileID: 8419825566748645223, guid: 85a230d7a817ccf4095daaf2534fe5db, type: 3}
+  - {fileID: 3079924085801633335, guid: 5484e6692e3875e4491534f89bf5b388, type: 3}
 --- !u!114 &582990332
 MonoBehaviour:
   m_ObjectHideFlags: 0

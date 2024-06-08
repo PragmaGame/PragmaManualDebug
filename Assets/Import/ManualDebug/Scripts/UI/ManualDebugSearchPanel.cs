@@ -11,15 +11,14 @@ namespace ManualDebug
     {
         [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private ScrollRect _scroll;
-
-        [SerializeField] private Dropdown _dropdown;
-
+        
         [SerializeField] private ManualDebugDropdownItem _prefab;
 
         private List<ManualDebugDropdownItem> _dropdownItems;
         private ManualDebugDropdownItem _selectedItem;
 
-        public event Action<string> SubmitEvent; 
+        public event Action<string> SubmitEvent;
+        public event Action StartSearchEvent;
 
         private void Awake()
         {
@@ -69,6 +68,8 @@ namespace ManualDebug
         private void OnInputSelect(string value)
         {
             _scroll.gameObject.SetActive(true);
+            
+            StartSearchEvent?.Invoke();
         }
 
         private void OnSubmit(string value)

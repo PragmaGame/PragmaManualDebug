@@ -12,7 +12,7 @@ namespace ManualDebug
         
         private ManualDebug _manualDebug;
 
-        private string _selectedMethod;
+        private MethodBind _selectedMethodBind;
         private object[] _selectedParams;
         
         public void SetManualDebug(ManualDebug manualDebug)
@@ -32,26 +32,33 @@ namespace ManualDebug
         private void OnEnable()
         {
             _searchPanel.SubmitEvent += OnSubmitSearch;
+            _searchPanel.StartSearchEvent += OnStartSearch;
             _invokeButton.onClick.AddListener(OnInvoke);
         }
 
         private void OnDisable()
         {
             _searchPanel.SubmitEvent -= OnSubmitSearch;
+            _searchPanel.StartSearchEvent -= OnStartSearch;
             _invokeButton.onClick.RemoveListener(OnInvoke);
         }
 
         private void OnSubmitSearch(string value)
         {
-            _selectedMethod = value;
-            _inputBuilder.Build(_manualDebug.GetMethod(value));
+            _selectedMethodBind = _manualDebug.GetBind(value);
+            _inputBuilder.Build(_selectedMethodBind);
+        }
+
+        private void OnStartSearch()
+        {
+            _inputBuilder.ClearInputs();
         }
 
         private void OnInvoke()
         {
             _selectedParams = _inputBuilder.GetParam();
-            
-            _manualDebug.Invoke(_selectedMethod, _selectedParams);
+
+            _selectedMethodBind.Invoke(_selectedParams);
         }
     }
 }
