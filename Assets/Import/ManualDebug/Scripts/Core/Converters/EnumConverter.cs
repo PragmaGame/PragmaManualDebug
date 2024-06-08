@@ -10,6 +10,11 @@ namespace ManualDebug
 
         public override object Convert(object value)
         {
+            if (value == null)
+            {
+                return Activator.CreateInstance(conversionType);
+            }
+            
             return Enum.Parse(conversionType, (string)value);
         }
     }

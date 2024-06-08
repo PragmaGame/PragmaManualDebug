@@ -15,10 +15,10 @@ namespace ManualDebug
             _inputs = new List<AbstractManualDebugInput>();
         }
 
-        public void Build(MethodBind bind)
+        public void Build(ManualMethod manualMethod)
         {
             ClearInputs();
-            BuildInputs(bind);
+            BuildInputs(manualMethod);
         }
 
         public void ClearInputs()
@@ -31,7 +31,7 @@ namespace ManualDebug
             _inputs.Clear();
         }
 
-        public void BuildInputs(MethodBind bind)
+        public void BuildInputs(ManualMethod bind)
         {
             foreach (var parameter in bind.Parameters)
             {

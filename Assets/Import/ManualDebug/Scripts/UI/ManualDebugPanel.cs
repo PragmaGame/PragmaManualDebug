@@ -12,21 +12,21 @@ namespace ManualDebug
         
         private ManualDebug _manualDebug;
 
-        private MethodBind _selectedMethodBind;
+        private ManualMethod _selectedManualMethod;
         private object[] _selectedParams;
         
         public void SetManualDebug(ManualDebug manualDebug)
         {
             _manualDebug = manualDebug;
         
-            _manualDebug.RefreshEvent += OnRefresh;
+            _manualDebug.DirtyContextsEvent += OnDirtyContexts;
             
-            OnRefresh();
+            OnDirtyContexts();
         }
 
-        private void OnRefresh()
+        private void OnDirtyContexts()
         {
-            _searchPanel.Refresh(_manualDebug.GetKeys);
+            _searchPanel.Refresh(_manualDebug.GetKeys());
         }
 
         private void OnEnable()
@@ -45,8 +45,8 @@ namespace ManualDebug
 
         private void OnSubmitSearch(string value)
         {
-            _selectedMethodBind = _manualDebug.GetBind(value);
-            _inputBuilder.Build(_selectedMethodBind);
+            _selectedManualMethod = _manualDebug.GetBind(value);
+            _inputBuilder.Build(_selectedManualMethod);
         }
 
         private void OnStartSearch()
@@ -58,7 +58,7 @@ namespace ManualDebug
         {
             _selectedParams = _inputBuilder.GetParam();
 
-            _selectedMethodBind.Invoke(_selectedParams);
+            _selectedManualMethod.Invoke(_selectedParams);
         }
     }
 }

@@ -9,18 +9,54 @@ namespace ManualDebug
     {
         private const BindingFlags FLAGS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly;
 
-        private readonly List<MethodBind> _methods;
+        private readonly List<ManualMethod> _methods;
+        private readonly List<object> _lazyRegisterContexts;
+        private readonly List<IOverrideParameter> _overrideParameters;
 
-        public event Action RefreshEvent;
+        public event Action DirtyContextsEvent;
 
         public ManualDebug()
         {
-            _methods = new List<MethodBind>();
+            _methods = new List<ManualMethod>();
+            _lazyRegisterContexts = new List<object>();
+
+            _overrideParameters = new List<IOverrideParameter>
+            {
+                new BoolOverride(),
+                new PrimitiveOverride(),
+                new StringOverride(),
+                new EnumOverride(),
+            };
         }
 
-        public List<string> GetKeys => _methods.Select(bind => bind.Key).ToList();
+        public List<string> GetKeys()
+        {
+            return _methods.Select(bind => bind.Key).ToList();
+        }
 
-        public MethodBind GetBind(string key) => _methods.Find(bind => bind.Key == key);
+        public ManualMethod GetBind(string key)
+        {
+            return _methods.Find(bind => bind.Key == key);
+        }
+
+        public void ResolveLazyRegistration()
+        {
+            RegisterContexts(_lazyRegisterContexts);
+            _lazyRegisterContexts.Clear();
+        }
+
+        public void LazyRegisterContext(object context)
+        {
+            _lazyRegisterContexts.Add(context);
+        }
+
+        public void LazyRegisterContexts(IEnumerable<object> contexts)
+        {
+            foreach (var context in contexts)
+            {
+                LazyRegisterContext(context);
+            }
+        }
 
         public void RegisterContext(object context, bool isNotify = false)
         {
@@ -32,7 +68,11 @@ namespace ManualDebug
 
                 foreach (var target in methods)
                 {
-                    _methods.Add(new MethodBind($"{type.Name}.{target.Name}", target, context, CreateParameters(target, type, context)));
+                    var attribute = target.GetCustomAttribute<ManualDebugButtonAttribute>();
+
+                    var key = !string.IsNullOrEmpty(attribute.alias) ? attribute.alias : $"{type.Name}.{target.Name}";
+                    
+                    _methods.Add(new ManualMethod(key, target, context, CreateParameters(target, type, context)));
                 }
 
                 type = type.BaseType;
@@ -40,7 +80,7 @@ namespace ManualDebug
 
             if (isNotify)
             {
-                RefreshEvent?.Invoke();
+                DirtyContextsEvent?.Invoke();
             }
         }
 
@@ -53,20 +93,25 @@ namespace ManualDebug
 
             if (isNotify)
             {
-                RefreshEvent?.Invoke();
+                DirtyContextsEvent?.Invoke();
             }
+        }
+
+        public void UnregisterContext(object context)
+        {
+            _methods.RemoveAll(manualMethod => manualMethod.Context == context);
         }
 
         public void Invoke(string key, object[] param = null)
         {
-            _methods.Find(bind => bind.Key == key).Invoke(param);
+            _methods.Find(manualMethod => manualMethod.Key == key).Invoke(param);
         }
 
         private List<Parameter> CreateParameters(MethodInfo target, Type contextType, object context)
         {
             var result = new List<Parameter>();
             var param = target.GetParameters();
-            var styles = target.GetCustomAttributes(typeof(ManualParameterStyleAttribute), false).Select(x => x as ManualParameterStyleAttribute).ToList();
+            var styles = target.GetCustomAttributes<ManualParameterStyleAttribute>().Select(x => x as ManualParameterStyleAttribute).ToList();
 
             foreach (var parameter in param)
             {
@@ -84,61 +129,55 @@ namespace ManualDebug
             {
                 displayName = parameterInfo.Name,
             };
-            
-            if (type.IsPrimitive || type == typeof(string))
+
+            foreach (var overrideParameter in _overrideParameters)
             {
-                parameter.converter = new PrimitiveConverter(type);
-                
-                if (type == typeof(bool))
+                if (overrideParameter.TryOverride(type, parameter))
                 {
-                    parameter.styleType = ManualParamStyleType.Toggle;
-                }
-                else
-                {
-                    parameter.styleType = ManualParamStyleType.Primitive;
+                    break;
                 }
             }
 
-            if (type.IsEnum)
-            {
-                parameter.converter = new EnumConverter(type);
-                parameter.styleType = ManualParamStyleType.Dropdown;
-
-                parameter.setter = new ParameterDefaultValueSetter
-                {
-                    isСachedValues = true,
-                    setterValues = Enum.GetNames(type),
-                };
-            }
-            
-            if (data != null)
-            {
-                parameter.styleType = data.styleType;
-
-                if (!string.IsNullOrEmpty(data.defaultValueSetterMethodName))
-                {
-                    var valueSetter = new ParameterDefaultValueSetter
-                    {
-                        isСachedValues = data.isСachedValues,
-                        setterContext = context,
-                        setterMethod = contextType.GetMethod(data.defaultValueSetterMethodName, FLAGS)
-                    };
-
-                    parameter.setter = valueSetter;
-                }
-                else if (data.defaultValues != null)
-                {
-                    var valueSetter = new ParameterDefaultValueSetter
-                    {
-                        isСachedValues = true,
-                        setterValues = data.defaultValues.Select(value => value.ToString())
-                    };
-
-                    parameter.setter = valueSetter;
-                }
-            }
+            OverrideParameterByAttributeData(parameter, data, context, contextType);
             
             return parameter;
+        }
+
+        
+        
+        public void OverrideParameterByAttributeData(Parameter parameter, ManualParameterStyleAttribute data, object context, Type contextType)
+        {
+            if (data == null)
+            {
+                return;
+            }
+            
+            parameter.styleType = data.styleType;
+
+            if (!string.IsNullOrEmpty(data.defaultValueSetterMethodName))
+            {
+                var valueSetter = new ParameterDefaultValueSetter
+                {
+                    isСachedValues = data.isСachedValues,
+                    setterContext = context,
+                    setterMethod = contextType.GetMethod(data.defaultValueSetterMethodName, FLAGS)
+                };
+
+                parameter.setter = valueSetter;
+                
+                return;
+            }
+
+            if (data.defaultValues != null)
+            {
+                var valueSetter = new ParameterDefaultValueSetter
+                {
+                    isСachedValues = true,
+                    setterValues = data.defaultValues.Select(value => value.ToString())
+                };
+
+                parameter.setter = valueSetter;
+            }
         }
     }
 }

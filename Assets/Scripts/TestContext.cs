@@ -42,7 +42,7 @@ public class TestContext
         Debug.Log($"SetDropdownString {stringValueName}");
     }
     
-    [ManualDebugButton]
+    [ManualDebugButton("alias SetDropdownStringAndInt")]
     [ManualParameterStyle(0, ManualParamStyleType.Dropdown, new object [] {"str1", "str2"})]
     public void SetDropdownStringAndInt(string stringValueName, int intValueName)
     {
@@ -56,11 +56,24 @@ public class TestContext
         Debug.Log($"SetFloatAndDropdownInt float : {floatValueName} int : {intValueName}");
     }
     
+    // Soon
+    [ManualDebugButton]
+    public void SetTestClass(TestClass testClass)
+    {
+        Debug.Log($"SetTestClass : {testClass}");
+    }
+
     public string[] GetStrings() => new[] { "DropdownString1", "DropdownString2" };
     
     public enum TestEnum
     {
         Element1 = 1,
         Element2 = 2,
+    }
+    
+    public class TestClass
+    {
+        public int testClassIntA;
+        public string testClassStringB;
     }
 }

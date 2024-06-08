@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace ManualDebug
 {
-    public class MethodBind
+    public class ManualMethod
     {
         protected List<Parameter> parameters;
         protected MethodInfo target;
@@ -15,7 +15,7 @@ namespace ManualDebug
         public object Context => context;
         public IReadOnlyList<Parameter> Parameters => parameters;
 
-        public MethodBind(string key, MethodInfo target, object context, List<Parameter> parameters)
+        public ManualMethod(string key, MethodInfo target, object context, List<Parameter> parameters)
         {
             this.key = key;
             this.target = target;
