@@ -1,14 +1,14 @@
 ﻿{
   "name": "com.pragma.manualdebug",
   "displayName": "Pragma ManualDebug",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6"
   },
   "samples": [
     {
       "displayName": "GetStarted",
-      "path": "Samples/GetStarted"
+      "path": "Samples~/GetStarted"
     }
   ]
 }
