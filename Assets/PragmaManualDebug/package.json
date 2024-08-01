@@ -2,6 +2,12 @@
   "name": "com.pragma.manualdebug",
   "displayName": "Pragma ManualDebug",
   "version": "1.0.1",
+  "author": {
+    "name": "Pragma",
+    "email": "pragmagame@gmail.com",
+    "url": "https://github.com/PragmaGame"
+  },
+  "license": "MIT"
   "dependencies": {
     "com.unity.textmeshpro": "3.0.6"
   },
