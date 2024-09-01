@@ -10,6 +10,7 @@ namespace Pragma.ManualDebug
     public class ManualDebugSearchPanel : MonoBehaviour
     {
         [SerializeField] private TMP_InputField _inputField;
+        [SerializeField] private Button _scrollButton;
         [SerializeField] private ScrollRect _scroll;
         
         [SerializeField] private ManualDebugDropdownItem _prefab;
@@ -30,6 +31,7 @@ namespace Pragma.ManualDebug
             _inputField.onValueChanged.AddListener(OnInputValueChanged);
             _inputField.onSelect.AddListener(OnInputSelect);
             _inputField.onSubmit.AddListener(OnSubmit);
+            _scrollButton.onClick.AddListener(OnClickScrollButton);
         }
 
         private void OnDisable()
@@ -37,6 +39,7 @@ namespace Pragma.ManualDebug
             _inputField.onValueChanged.RemoveListener(OnInputValueChanged);
             _inputField.onSelect.RemoveListener(OnInputSelect);
             _inputField.onSubmit.RemoveListener(OnSubmit);
+            _scrollButton.onClick.RemoveListener(OnClickScrollButton);
         }
 
         public void Refresh(List<string> keys)
@@ -85,6 +88,11 @@ namespace Pragma.ManualDebug
             {
                 sorted[i].transform.SetSiblingIndex(i);
             }
+        }
+        
+        private void OnClickScrollButton()
+        {
+            _scroll.gameObject.SetActive(!_scroll.gameObject.activeInHierarchy);
         }
     }
 }

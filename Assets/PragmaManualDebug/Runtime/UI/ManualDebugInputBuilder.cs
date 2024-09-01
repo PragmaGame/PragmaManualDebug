@@ -25,6 +25,11 @@ namespace Pragma.ManualDebug
         {
             foreach (var input in _inputs)
             {
+                if (input == null)
+                {
+                    continue;
+                }
+                
                 Destroy(input.gameObject);
             }
             
@@ -36,8 +41,15 @@ namespace Pragma.ManualDebug
             foreach (var parameter in bind.Parameters)
             {
                 var prefabInput = _prefabInputs.FirstOrDefault(prefab => prefab.Style == parameter.styleType);
-                var input = Instantiate(prefabInput, transform);
-                input.Setup(parameter.displayName, parameter.GetDefaultValues());
+                
+                AbstractManualDebugInput input = null;
+                
+                if (prefabInput != null)
+                {
+                    input = Instantiate(prefabInput, transform);
+                    input.Setup(parameter.displayName, parameter.GetDefaultValues());
+                }
+
                 _inputs.Add(input);
             }
         }
@@ -48,7 +60,7 @@ namespace Pragma.ManualDebug
 
             for (var i = 0; i < _inputs.Count; i++)
             {
-                param[i] = _inputs[i].GetParam();
+                param[i] = _inputs[i]?.GetParam();
             }
 
             return param;

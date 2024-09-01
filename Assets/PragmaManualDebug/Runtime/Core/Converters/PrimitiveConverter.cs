@@ -14,7 +14,14 @@ namespace Pragma.ManualDebug
         {
             if (value == null)
             {
-                return Activator.CreateInstance(conversionType);
+                try
+                {
+                    return Activator.CreateInstance(conversionType);
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
             }
             
             return System.Convert.ChangeType(value, conversionType, CultureInfo.InvariantCulture);

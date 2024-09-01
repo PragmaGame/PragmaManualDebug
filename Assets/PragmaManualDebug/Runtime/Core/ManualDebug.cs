@@ -42,6 +42,11 @@ namespace Pragma.ManualDebug
 
         public void ResolveLazyRegistration()
         {
+            if (_lazyRegisterContexts.Count == 0)
+            {
+                return;
+            }
+            
             RegisterContexts(_lazyRegisterContexts);
             _lazyRegisterContexts.Clear();
         }
@@ -62,6 +67,7 @@ namespace Pragma.ManualDebug
         public void RegisterContext(object context, bool isNotify = false)
         {
             var type = context.GetType();
+            var contextName = type.Name;
             
             while (type != null)
             {
@@ -71,7 +77,7 @@ namespace Pragma.ManualDebug
                 {
                     var attribute = target.GetCustomAttribute<ManualDebugButtonAttribute>();
 
-                    var key = !string.IsNullOrEmpty(attribute.alias) ? attribute.alias : $"{type.Name}.{target.Name}";
+                    var key = !string.IsNullOrEmpty(attribute.alias) ? attribute.alias : $"{contextName}.{target.Name}";
                     
                     _methods.Add(new ManualMethod(key, target, context, CreateParameters(target, type, context)));
                 }
@@ -101,6 +107,8 @@ namespace Pragma.ManualDebug
         public void UnregisterContext(object context)
         {
             _methods.RemoveAll(manualMethod => manualMethod.Context == context);
+            
+            DirtyContextsEvent?.Invoke();
         }
 
         public void Invoke(string key, object[] param = null)
@@ -129,6 +137,7 @@ namespace Pragma.ManualDebug
             var parameter = new Parameter
             {
                 displayName = parameterInfo.Name,
+                converter = new PrimitiveConverter(type, false)
             };
 
             foreach (var overrideParameter in _overrideParameters)
